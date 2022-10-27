@@ -22,10 +22,38 @@ const fetchMyIP = function(callback) {
       return;
     }
 
+
     const data = JSON.parse(body);
     
     callback(null, data.ip);
   });
 };
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIp = function(ip, callback) {
+  request.get(`http://ipwho.is/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+    }
+    
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching Coordinates. Response: ${body}`;
+      callback(Error(msg), null);
+    }
+    
+    const data = JSON.parse(body);
+    
+    if (data.success === false) {
+      const msg = `Success status was ${data.success}. Server message says: ${data.message}`;
+      callback(Error(msg), null);
+    }
+
+    const coordinates = {
+      latitude: data.latitude,
+      longitude: data.longitude
+    };
+
+    callback(null, coordinates);
+  });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIp };
