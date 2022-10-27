@@ -10,22 +10,22 @@ const request = require("request");
  */
  const fetchMyIP = function(callback) {
   // use request to fetch IP address from JSON API
- request.get("https://api.ipify.org?format=json", (error, response, body) => {
-   if (error) {
-     callback(error, null);
-     return;
-   }
+  request.get("https://api.ipify.org?format=json", (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
 
-   const data = JSON.parse(body);
-   if(data.ip === undefined) {
-     const noIPErr = new Error("Error: No IP was recieved from the request...")
-     callback(error, null);
-     return;
-   }
+    if(response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`
+      callback(Error(msg), null);
+      return;
+    }
 
-   callback(null, data.ip)
- }); 
+    const data = JSON.parse(body);
+    
+    callback(null, data.ip)
+  }); 
 };
-
 
 module.exports = { fetchMyIP };
