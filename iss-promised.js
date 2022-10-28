@@ -44,7 +44,7 @@ const fetchISSFlyOverTimes = function(coordinates) {
   coordinates = {
     longitude: coordinates.longitude,
     latitude: coordinates.latitude
-  }
+  };
   return request(request.get(`https://iss-flyover.herokuapp.com/json/?lat=${coordinates.latitude}&lon=${coordinates.longitude}`));
 };
 
@@ -52,10 +52,10 @@ const fetchISSFlyOverTimes = function(coordinates) {
 // Calls each function
 const nextISSTimesForMyLocation = function() {
   fetchMyIP()
-  .then(fetchCoordsByIp)
-  .then(fetchISSFlyOverTimes)
-  .then(printFlyOvers)
-  .catch(error => console.log("It didn't work: ", error.message));
+    .then(fetchCoordsByIp)
+    .then(fetchISSFlyOverTimes)
+    .then(printFlyOvers)
+    .catch(error => console.log("It didn't work: ", error.message));
 };
 
 
@@ -65,6 +65,6 @@ const printFlyOvers = function(passTimes) {
   passTimes.forEach((passTime) => {
     console.log(`Next pass at ${new Date(passTime.risetime * 1000)} for ${passTime.duration} seconds!`); // We have to multiple our risttimes by 1000 because linux??
   });
-}
+};
 
 module.exports = { nextISSTimesForMyLocation };
